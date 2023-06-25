@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Department;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,7 +23,7 @@ class EmployeeFactory extends Factory
           'first_name' => fake() ->firstName(),
           'middle_name' => fake()->firstName(),
           'last_name' => fake() ->lastName(),
-          'password' => fake() ->password(),
+          'password' => Hash::make('password'),
           'depar_id' => fake() ->numberBetween(1,10)#Department::factory()
            
             //

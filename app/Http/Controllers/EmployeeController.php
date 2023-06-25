@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\EmployeesDataTable;
 use App\Models\Post;
 use App\Models\Employee;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class EmployeeController extends Controller
 {
@@ -17,11 +19,49 @@ class EmployeeController extends Controller
         //
          
         return view('employees',[
-        'employees' => Employee::with('department')->get()]);
+        'employees' => Employee::with('department')->get(),
+        'employee' => auth()->user()
+    ]);
 
     }
+    public function showContent(EmployeesDataTable $dataTable){
+        return $dataTable->render('employees.index');
+        
+        // return response()->json(
 
+            
+        //     // Employee::with('department')->get() 
+        // );
+    }
+    public function index(EmployeesDataTable $dataTable){
+        return $dataTable->render('employees.index');
+        
+        // return response()->json(
 
+            
+        //     // Employee::with('department')->get() 
+        // );
+    }
+    public function show() {
+        // ddd(auth()->user());
+        if (auth()->user()){
+            return redirect('employees');//view('employees');
+        }
+        return view('login');
+    }
+    public function login(){
+        // ddd(request()->all());
+
+        validator(request()->all(),[
+            'employee_code' => ['required'],
+            'password' => ['required']
+        ])->validate();
+        if(auth()->attempt(request()->only(['employee_code','password']))){
+            // ddd(auth()->user());
+            return redirect('employees');
+        }
+        return redirect('login');
+    }
     public function home(){
         return view('posts',[
             'posts' => Post::latest()->with('category','author')->get()
@@ -65,7 +105,7 @@ class EmployeeController extends Controller
 
 
             $employee = Employee::findOrFail($value);
-            $deleted[] = $employee->full_name();
+            $deleted[] = $employee->full_name()." of Department ".$employee->department->dept_name;
             #lll code...
             $employee->delete();
         }   
@@ -73,6 +113,12 @@ class EmployeeController extends Controller
 
         return redirect('/employees')->with('success', 'Deleted <br /> '.implode(" <br /> ",$deleted));   
         #ddd($data);
+    }
+    
+
+    public function logout(){
+        auth()->logout();
+        return redirect('/login');
     }
     
 }

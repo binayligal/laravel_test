@@ -1,4 +1,5 @@
 <x-layout>
+    <h1>Employee Edit Page</h1>
 <form action="{{ url('employee/edit/').'/'.$employee->employee_id}}" method="POST">
 @csrf
 Please select the Employee

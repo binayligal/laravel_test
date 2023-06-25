@@ -1,4 +1,8 @@
 <x-layout>
+    <strong>
+
+        Logged in User : {{$employee->full_name()}}
+    </strong>
     @if (\Session::has('success'))
         <div class="alert alert-success">
             <ul>
@@ -39,4 +43,6 @@
         <button type="submit" onclick="return confirm('Delete all?')">Delete Selected</button>
  
 </form>
+<br>
+<a href="{{url('logout')}}">Logout</a>
 </x-layout>
